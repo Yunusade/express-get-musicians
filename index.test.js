@@ -32,19 +32,27 @@ describe("./musicians endpoint", () => {
   test("testing post musician", async () => {
     const post = await request(app).post("/musicians").send({
       name: "The odos",
-      instrument: 'Guitar'
+      instrument: "Guitar",
     });
-    const data = JSON.parse(post.text)
-    expect(data.name).toBe("The odos")
+    const data = JSON.parse(post.text);
+    expect(data.name).toBe("The odos");
   });
 
   test("Testing Put musician", async () => {
     const putMusician = await request(app).put("/musicians/4").send({
       name: "The Brimers",
-      instrument: 'Guitar'
+      instrument: "Guitar",
     });
     const response = await request(app).get("/musicians/4");
-    const data = JSON.parse(response.text)
-    expect(data.name).toBe("The Brimers")
-  })
+    const data = JSON.parse(response.text);
+    expect(data.name).toBe("The Brimers");
+  });
+
+  test("should return errors array if fields aren't provided", async () => {
+    const response = await request(app)
+      .post("/musicians")
+      .send({ name: "jaja" });
+    expect(response.body).toHaveProperty("errors");
+    expect(Array.isArray(response.body.errors)).toBe(true)
+  });
 });
